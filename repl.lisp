@@ -157,7 +157,6 @@
     (finish-output)))
 
 (rl:register-function :complete #'custom-complete)
-(rl:register-function :redisplay #'syntax-hl)
 
 (defvar *special*
   (alexandria:alist-hash-table
@@ -212,6 +211,7 @@
                   (format t "~a~a~%" *ret* fmt))))))))
     (in-package :sbcli)
     (finish-output nil)
+    (rl:register-function :redisplay #'syntax-hl)
     (sbcli "" *prompt*)))
 
 (if (probe-file *config-file*)
