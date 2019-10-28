@@ -7,7 +7,7 @@
 
 (defpackage :sbcli
   (:use :common-lisp :cffi)
-  (:export sbcli *repl-version* *repl-name* *goodbye-msg* *prompt* *prompt2* *ret* *config-file*
+  (:export sbcli *repl-version* *repl-name* *goodbye-msg* *prompt* *prompt2* *ret* *init-file*
            *hist-file* *special* *last-result*))
 
 (defpackage :sbcli-user
@@ -23,8 +23,8 @@
 (defvar *ret*          "=> ")
 (defvar *home-directory*
   (format nil "~a/sbcli/"  (or (sb-ext:posix-getenv "XDG_CONFIG_HOME") "~/.config/")))
-(defvar *config-file*        (merge-pathnames "init.lisp" *home-directory*))
-(defvar *legacy-config-file* "~/.sbclirc")
+(defvar *init-file*        (merge-pathnames "init.lisp" *home-directory*))
+(defvar *legacy-init-file* "~/.sbclirc")
 (defvar *hist-file*        (merge-pathnames "history" *home-directory*))
 (defvar *last-result*      nil)
 (defvar *hist*             (list))
@@ -222,8 +222,8 @@
     (sbcli "" *prompt*)))
 
 (cond
-  ((probe-file *config-file*)        (load *config-file*)) ; .config/sbcli/init.lisp
-  ((probe-file *legacy-config-file*) (load *legacy-config-file*))) ; ~/.sbclirc
+  ((probe-file *init-file*)        (load *init-file*)) ; .config/sbcli/init.lisp
+  ((probe-file *legacy-init-file*) (load *legacy-init-file*))) ; ~/.sbclirc
 
 (format t "~a version ~a~%" *repl-name* *repl-version*)
 (format t "Press CTRL-C or CTRL-D or type :q to exit~%~%")
