@@ -19,15 +19,19 @@
 (defvar *repl-name*    "Veit's REPL for SBCL")
 (defvar *goodbye-msg*  "Bye for now.")
 (defvar *prompt*       "sbcl> ")
-(defvar *prompt2*       "....> ")
+(defvar *prompt2*      "....> ")
 (defvar *ret*          "=> ")
-(defvar *config-file*  "~/.sbclirc")
-(defvar *hist-file*    "~/.sbcli_history")
-(defvar *last-result*  nil)
-(defvar *hist*         (list))
+(defvar *home-directory*
+  (format nil "~a/sbcli/"  (or (sb-ext:posix-getenv "XDG_CONFIG_HOME") "~/.config/")))
+(defvar *config-file*        (merge-pathnames "init.lisp" *home-directory*))
+(defvar *legacy-config-file* "~/.sbclirc")
+(defvar *hist-file*        (merge-pathnames "history" *home-directory*))
+(defvar *last-result*      nil)
+(defvar *hist*             (list))
 (declaim (special *special*))
 
 (defun read-hist-file ()
+  (ensure-directories-exist *hist-file*)
   (with-open-file (in *hist-file* :if-does-not-exist :create)
     (loop for line = (read-line in nil nil)
       while line
@@ -37,6 +41,7 @@
                                :void))))
 
 (defun update-hist-file (str)
+  (ensure-directories-exist *hist-file*)
   (with-open-file (out *hist-file*
                        :direction :output
                        :if-exists :append
@@ -216,8 +221,9 @@
     (finish-output nil)
     (sbcli "" *prompt*)))
 
-(if (probe-file *config-file*)
-  (load *config-file*))
+(cond
+  ((probe-file *config-file*)        (load *config-file*)) ; .config/sbcli/init.lisp
+  ((probe-file *legacy-config-file*) (load *legacy-config-file*))) ; ~/.sbclirc
 
 (format t "~a version ~a~%" *repl-name* *repl-version*)
 (format t "Press CTRL-C or CTRL-D or type :q to exit~%~%")
