@@ -87,6 +87,6 @@ For reference, here is a complete list of the variables we expose:
 *hist*         ; => ()
 ```
 
-<hr/>
+---
 
 Have fun!
