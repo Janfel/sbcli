@@ -57,8 +57,9 @@ break if your result contains newlines. Use at your own peril for now!
 ## Customization
 
 If you want you can add customizations to `sbcli`. On startup
-it will load a file called `.sbclirc` in your home directory
-if it exists. You can execute arbitrary code there, two of
+it will load `.config/sbcli/init.lisp` if it exists.
+Placing the init file at `~/.sbclirc` is considered deprecated.
+You can execute arbitrary code there, two of
 the more interesting values to set are `*prompt*` and `*ret*`.
 Check out an example resource file
 [here](https://github.com/hellerve/sbcli/blob/master/examples/.sbclirc).
@@ -68,21 +69,30 @@ Check out an example resource file
 For reference, here is a complete list of the variables we expose:
 
 ```lisp
-; the name of the REPL, printed on top
-*repl-name*    ; => "Veit's REPL for SBCL"
+;; the name and version of the REPL
+;; these are constants
++repl-name+    ; => "Veit's REPL for SBCL"
++repl-version+ ; => "0.1.3"
 
-; the prompt and continuation prompt variables
+;; the startup and shutdown messages
+*welcome-msg*
+*goodbye-msg*
+
+;; the prompt and continuation prompt variables
 *prompt*       ; => "sbcl> "
 *prompt2*      ; => "....> "
 
-; the return value prompt
+;; the return value prompt
 *ret*          ; => "=> "
 
-; where to store the history
-*hist-file*    ; => "~/.sbcli_history"
+;; where to store the history or nil to not store it
+*hist-file*    ; => "~/.config/sbcli/history"
 
-; the last result and history variables
-; while nothing prevents you from writing to them, i advise against it
+;; the list of all special commands
+*special*
+
+;; the last result and history variables
+;; while nothing prevents you from writing to them, i advise against it
 *last-result*  ; => nil
 *hist*         ; => ()
 ```
