@@ -102,7 +102,7 @@
   (format t "~a version ~a~%" +repl-name+ +repl-version+)
   (write-line "Special commands:")
   (maphash
-   (lambda (k v) (format t "  :~a: ~a~%" k (documentation (cdr v) t)))
+   (lambda (k v) (format t "  :~a~c~a~%" k #\tab (documentation (cdr v) t)))
    *special*)
   (write-line "Currently defined:")
   (do-all-symbols (s *package*)
