@@ -1,6 +1,6 @@
 #!/usr/bin/env -S sbcl --script
-(load "~/quicklisp/setup")
 
+(load (format nil "~a/setup.lisp" (or (sb-ext:posix-getenv "QUICKLISP_HOME") "~/quicklisp/")))
 (let ((*standard-output* (make-broadcast-stream)))
   (ql:quickload "alexandria")
   (ql:quickload "cl-readline"))

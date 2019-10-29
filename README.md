@@ -17,7 +17,8 @@ cl-readline](https://github.com/mrkkrp/cl-readline#installation).
 [cl-readline](https://github.com/mrkkrp/cl-readline).
 If you have Quicklisp installed, cl-readline will be installed
 on `sbcli`s first launch. `sbcli` assumes that Quicklisp is
-installed under `~/quicklisp`.
+installed under `~/quicklisp`. This value can be overridden
+by setting `$QUICKLISP_HOME`.
 
 ## Usage
 
