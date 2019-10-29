@@ -7,7 +7,7 @@
 
 (defpackage :sbcli
   (:use :common-lisp :cffi)
-  (:export sbcli *repl-version* *repl-name* *prompt* *prompt2* *ret* *config-file*
+  (:export sbcli *repl-version* *repl-name* *goodbye-msg* *prompt* *prompt2* *ret* *config-file*
            *hist-file* *special* *last-result*))
 
 (defpackage :sbcli-user
@@ -17,6 +17,7 @@
 
 (defvar *repl-version* "0.1.3")
 (defvar *repl-name*    "Veit's REPL for SBCL")
+(defvar *goodbye-msg*  "Bye for now.")
 (defvar *prompt*       "sbcl> ")
 (defvar *prompt2*       "....> ")
 (defvar *ret*          "=> ")
@@ -44,7 +45,7 @@
 
 (defun end ()
   "Ends the session"
-  (format t "Bye for now.~%")
+  (write-line *goodbye-msg*)
   (sb-ext:quit))
 
 (defun reset ()
