@@ -57,7 +57,8 @@ break if your result contains newlines. Use at your own peril for now!
 ## Customization
 
 If you want you can add customizations to `sbcli`. On startup
-it will load `.config/sbcli/init.lisp` if it exists.
+it will load `~/.config/sbcli/init.lisp` if it exists, honoring
+the value of `$XDG_CONFIG_HOME`.
 Placing the init file at `~/.sbclirc` is considered deprecated.
 You can execute arbitrary code there, two of
 the more interesting values to set are `*prompt*` and `*ret*`.
@@ -66,17 +67,23 @@ Check out an example resource file
 
 ### Exposed Variables
 
-For reference, here is a complete list of the variables we expose:
+For reference, here is a complete list of the
+variables we expose and their default values:
 
 ```lisp
+;;; these are constants and cannot be changed
+
 ;; the name and version of the REPL
-;; these are constants
 +repl-name+    ; => "Veit's REPL for SBCL"
 +repl-version+ ; => "0.1.3"
++home-directory+ ; => "~/.config/sbcli/"
++init-file+    ; => "~/.config/sbcli/init.lisp"
+
+;;; these are variables you can customize
 
 ;; the startup and shutdown messages
-*welcome-msg*
-*goodbye-msg*
+*welcome-msg* ; => "Veit's REPL for SBCL version 0.1.3"
+*goodbye-msg* ; => "Bye for now."
 
 ;; the prompt and continuation prompt variables
 *prompt*       ; => "sbcl> "
@@ -91,8 +98,9 @@ For reference, here is a complete list of the variables we expose:
 ;; the list of all special commands
 *special*
 
+;;; these are variables you shouldn't customize
+
 ;; the last result and history variables
-;; while nothing prevents you from writing to them, i advise against it
 *last-result*  ; => nil
 *hist*         ; => ()
 ```
