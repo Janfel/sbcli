@@ -105,16 +105,22 @@
    (lambda (k v) (format t "  :~a~c~a~%" k #\tab (documentation (cdr v) t)))
    *special*)
   (write-line "Currently defined:")
-  (do-all-symbols (s *package*)
-    (when (and (or (fboundp s) (boundp s)) (eql (symbol-package s) *package*))
-      (let ((what (if (fboundp s) 'function 'variable)))
-        (format t " ~a: ~a (~a) ~a~%" (string-downcase (string s))
-                (or (documentation s what)
-                    "No documentation")
-                what
-                (if (boundp s)
-                    (format nil "(value ~a)" (eval s))
-                    ""))))))
+  (do-all-symbols (sym *package*)
+    (when (eql (symbol-package sym) *package*)
+      (if (boundp sym)
+          (format t "  ~a~c(~a) ~a = ~a~%"
+                  (string-downcase (string sym))
+                  #\tab
+                  (if (constantp sym) 'constant 'variable)
+                  (or (documentation sym 'variable)
+                      "No documentation")
+                  (eval sym)))
+      (if (fboundp sym)
+          (format t "  ~a~c(FUNCTION) ~a~%"
+                  (string-downcase (string sym))
+                  #\tab
+                  (or (documentation sym 'function)
+                      "No documentation"))))))
 
 (defun dump-disasm (sym)
   "Dumps the disassembly of a symbol <sym>"
