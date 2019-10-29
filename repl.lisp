@@ -7,8 +7,8 @@
 
 (defpackage :sbcli
   (:use :common-lisp :cffi)
-  (:export sbcli +repl-name+ +repl-version+ *welcome-msg* *goodbye-msg* *prompt* *prompt2* *ret* *init-file*
-           *hist-file* *special* *last-result*))
+  (:export sbcli +repl-name+ +repl-version+ *welcome-msg* *goodbye-msg* *prompt* *prompt2* *ret*
+           +home-directory+ +init-file+ *hist-file* *special* *last-result*))
 
 (defpackage :sbcli-user
   (:use :common-lisp :sbcli))
@@ -17,17 +17,19 @@
 
 (defconstant +repl-name+    "Veit's REPL for SBCL")
 (defconstant +repl-version+ "0.1.3")
+(defconstant +home-directory+
+  (format nil "~a/sbcli/"   (or (sb-ext:posix-getenv "XDG_CONFIG_HOME") "~/.config/"))
+  "The directory where the init and history files are stored.")
+(defconstant +init-file+
+  (merge-pathnames "init.lisp" +home-directory+)
+  "The lisp file that is loaded on startup.")
 
 (defvar *welcome-msg*       (format nil "~a version ~a~%" +repl-name+ +repl-version+))
 (defvar *goodbye-msg*       "Bye for now.")
 (defvar *prompt*            "sbcl> ")
 (defvar *prompt2*           "....> ")
 (defvar *ret*               "=> ")
-(defvar *home-directory*
-  (format nil "~a/sbcli/"   (or (sb-ext:posix-getenv "XDG_CONFIG_HOME") "~/.config/")))
-(defvar *init-file*         (merge-pathnames "init.lisp" *home-directory*))
-(defvar *legacy-init-file*  "~/.sbclirc")
-(defvar *hist-file*         (merge-pathnames "history" *home-directory*))
+(defvar *hist-file*         (merge-pathnames "history" +home-directory+))
 (defvar *last-result*       nil)
 (defvar *hist*              nil)
 (declaim (special *special*))
@@ -234,8 +236,8 @@
     (sbcli "" *prompt*)))
 
 (cond
-  ((probe-file *init-file*)        (load *init-file*)) ; .config/sbcli/init.lisp
-  ((probe-file *legacy-init-file*) (load *legacy-init-file*))) ; ~/.sbclirc
+  ((probe-file +init-file+)  (load +init-file+))   ; .config/sbcli/init.lisp
+  ((probe-file "~/.sbclirc") (load "~/.sbclirc"))) ; legacy init file
 
 (write-line *welcome-msg*)
 (write-line "Press CTRL-C or CTRL-D or type ,q to exit")
