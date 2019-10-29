@@ -103,7 +103,10 @@
   (write-line "Special commands:")
   (maphash
    (lambda (k v) (format t "  :~a~c~a~%" k #\tab (documentation (cdr v) t)))
-   *special*)
+   *special*))
+
+(defun print-defined-symbols ()
+  "Lists all symbols defined during this session"
   (write-line "Currently defined:")
   (do-all-symbols (sym *package*)
     (when (eql (symbol-package sym) *package*)
@@ -176,6 +179,7 @@
   (alexandria:alist-hash-table
    `(("h"    . (1  . ,#'help))
      ("help" . (0  . ,#'general-help))
+     ("def"  . (0  . ,#'print-defined-symbols))
      ("s"    . (1  . ,#'write-to-file))
      ("d"    . (1  . ,#'dump-disasm))
      ("t"    . (-1 . ,#'dump-type))
