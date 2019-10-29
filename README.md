@@ -26,21 +26,22 @@ REPL, you can edit normally with readline capabilities. Hitting tab will
 autocomplete (note that if there is more than one possibility, you’ll have to
 hit tab twice).
 
-Typing `:help` will give you an overview over all the available special cases
-and give you an overview over what you’ve defined.
+Typing `,help` will list all available special commands.
 
-Typing `:h symbol` will enter inspection mode for a symbol. Typing `CTRL-D`
+Typing `,def` will give you an overview over what you’ve defined.
+
+Typing `,h symbol` will enter inspection mode for a symbol. Typing `CTRL-D`
 exits inspection mode.
 
-Typing `:q`, `CTRL-D`, or `CTRL-C` will exit the REPL.
+Typing `,q`, `CTRL-D`, or `CTRL-C` will exit the REPL.
 
-Typing `:r` resets the environment.
+Typing `,r` resets the environment.
 
-Typing `:d symbol` dumps the disassembly of a symbol.
+Typing `,d symbol` dumps the disassembly of a symbol.
 
-Typing `:t <expression>` prints the type returned by an expression.
+Typing `,t <expression>` prints the type returned by an expression.
 
-Typing `:s filename` will save all of the expressions that were typed and
+Typing `,s filename` will save all of the expressions that were typed and
 evaluated to the file specified, in the format:
 
 ```lisp
