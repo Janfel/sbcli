@@ -196,7 +196,7 @@
     (if (string= text "") (sbcli "" *prompt*))
     (when *hist-file* (update-hist-file text))
     (cond
-      ((and (> (length text) 1) (string= (subseq text 0 1) ":"))
+      ((and (> (length text) 1) (string= (subseq text 0 1) ","))
        (let* ((splt (split text #\Space))
               (k (subseq (car splt) 1 (length (car splt))))
               (v (gethash k *special*)))
