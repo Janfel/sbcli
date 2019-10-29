@@ -48,7 +48,7 @@
                        :direction :output
                        :if-exists :append
                        :if-does-not-exist :create)
-    (format out "~a~%" str)))
+    (write-line str out)))
 
 (defun end ()
   "Ends the session"
@@ -100,11 +100,11 @@
 (defun general-help ()
   "Prints a general help message"
   (format t "~a version ~a~%" +repl-name+ +repl-version+)
-  (format t "Special commands:~%")
+  (write-line "Special commands:")
   (maphash
     (lambda (k v) (format t "  :~a: ~a~%" k (documentation (cdr v) t)))
     *special*)
-  (format t "Currently defined:~%")
+  (write-line "Currently defined:")
   (do-all-symbols (s *package*)
     (when (and (or (fboundp s) (boundp s)) (eql (symbol-package s) *package*))
       (let ((what (if (fboundp s) 'function 'variable)))
@@ -214,7 +214,7 @@
                         (unbound-variable (var) (format *error-output* "~a~%" var))
                         (undefined-function (fun) (format *error-output* "~a~%" fun))
                         (sb-int:compiled-program-error ()
-                          (format *error-output* "Compiler error.~%"))
+                          (write-line "Compiler error." *error-output*))
                         (error (condition)
                           (format *error-output* "Evaluation error: ~a~%" condition))))
               (add-res text *last-result*)
@@ -228,7 +228,8 @@
   ((probe-file *legacy-init-file*) (load *legacy-init-file*))) ; ~/.sbclirc
 
 (write-line *welcome-msg*)
-(format t "Press CTRL-C or CTRL-D or type :q to exit~%~%")
+(write-line "Press CTRL-C or CTRL-D or type :q to exit")
+(terpri)
 (finish-output nil)
 
 (when *hist-file* (read-hist-file))
