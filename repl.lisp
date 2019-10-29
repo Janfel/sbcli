@@ -102,7 +102,7 @@
   (format t "~a version ~a~%" +repl-name+ +repl-version+)
   (write-line "Special commands:")
   (maphash
-   (lambda (k v) (format t "  :~a~c~a~%" k #\tab (documentation (cdr v) t)))
+   (lambda (k v) (format t "  ~a~c~a~%" k #\tab (documentation (cdr v) t)))
    *special*))
 
 (defun print-defined-symbols ()
@@ -238,7 +238,7 @@
   ((probe-file *legacy-init-file*) (load *legacy-init-file*))) ; ~/.sbclirc
 
 (write-line *welcome-msg*)
-(write-line "Press CTRL-C or CTRL-D or type :q to exit")
+(write-line "Press CTRL-C or CTRL-D or type ,q to exit")
 (terpri)
 (finish-output nil)
 
