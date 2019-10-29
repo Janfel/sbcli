@@ -7,7 +7,7 @@
 
 (defpackage :sbcli
   (:use :common-lisp :cffi)
-  (:export sbcli *repl-version* *repl-name* *goodbye-msg* *prompt* *prompt2* *ret* *init-file*
+  (:export sbcli +repl-name+ +repl-version+ *welcome-msg* *goodbye-msg* *prompt* *prompt2* *ret* *init-file*
            *hist-file* *special* *last-result*))
 
 (defpackage :sbcli-user
@@ -15,19 +15,21 @@
 
 (in-package :sbcli)
 
-(defvar *repl-version* "0.1.3")
-(defvar *repl-name*    "Veit's REPL for SBCL")
-(defvar *goodbye-msg*  "Bye for now.")
-(defvar *prompt*       "sbcl> ")
-(defvar *prompt2*      "....> ")
-(defvar *ret*          "=> ")
+(defconstant +repl-name+    "Veit's REPL for SBCL")
+(defconstant +repl-version+ "0.1.3")
+
+(defvar *welcome-msg*       (format nil "~a version ~a~%" +repl-name+ +repl-version+))
+(defvar *goodbye-msg*       "Bye for now.")
+(defvar *prompt*            "sbcl> ")
+(defvar *prompt2*           "....> ")
+(defvar *ret*               "=> ")
 (defvar *home-directory*
-  (format nil "~a/sbcli/"  (or (sb-ext:posix-getenv "XDG_CONFIG_HOME") "~/.config/")))
-(defvar *init-file*        (merge-pathnames "init.lisp" *home-directory*))
-(defvar *legacy-init-file* "~/.sbclirc")
-(defvar *hist-file*        (merge-pathnames "history" *home-directory*))
-(defvar *last-result*      nil)
-(defvar *hist*             (list))
+  (format nil "~a/sbcli/"   (or (sb-ext:posix-getenv "XDG_CONFIG_HOME") "~/.config/")))
+(defvar *init-file*         (merge-pathnames "init.lisp" *home-directory*))
+(defvar *legacy-init-file*  "~/.sbclirc")
+(defvar *hist-file*         (merge-pathnames "history" *home-directory*))
+(defvar *last-result*       nil)
+(defvar *hist*              nil)
 (declaim (special *special*))
 
 (defun read-hist-file ()
@@ -97,7 +99,7 @@
 
 (defun general-help ()
   "Prints a general help message"
-  (format t "~a version ~a~%" *repl-name* *repl-version*)
+  (format t "~a version ~a~%" +repl-name+ +repl-version+)
   (format t "Special commands:~%")
   (maphash
     (lambda (k v) (format t "  :~a: ~a~%" k (documentation (cdr v) t)))
@@ -166,13 +168,13 @@
 ;; -1 means take the string as one arg
 (defvar *special*
   (alexandria:alist-hash-table
-    `(("h" . (1 . ,#'help))
-      ("help" . (0 . ,#'general-help))
-      ("s" . (1 . ,#'write-to-file))
-      ("d" . (1 . ,#'dump-disasm))
-      ("t" . (-1 . ,#'dump-type))
-      ("q" . (0 . ,#'end))
-      ("r" . (0 . ,#'reset))) :test 'equal))
+    `(("h"    . (1  . ,#'help))
+      ("help" . (0  . ,#'general-help))
+      ("s"    . (1  . ,#'write-to-file))
+      ("d"    . (1  . ,#'dump-disasm))
+      ("t"    . (-1 . ,#'dump-type))
+      ("q"    . (0  . ,#'end))
+      ("r"    . (0  . ,#'reset))) :test 'equal))
 
 (defun sbcli (txt p)
   (let ((text
@@ -225,7 +227,7 @@
   ((probe-file *init-file*)        (load *init-file*)) ; .config/sbcli/init.lisp
   ((probe-file *legacy-init-file*) (load *legacy-init-file*))) ; ~/.sbclirc
 
-(format t "~a version ~a~%" *repl-name* *repl-version*)
+(write-line *welcome-msg*)
 (format t "Press CTRL-C or CTRL-D or type :q to exit~%~%")
 (finish-output nil)
 
