@@ -2,7 +2,6 @@
 
 (load (format nil "~a/setup.lisp" (or (sb-ext:posix-getenv "QUICKLISP_HOME") #P"~/quicklisp/")))
 (let ((*standard-output* (make-broadcast-stream)))
-  (ql:quickload "alexandria")
   (ql:quickload "cl-readline"))
 
 (defpackage :sbcli
