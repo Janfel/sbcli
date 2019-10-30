@@ -170,17 +170,21 @@
 
 (rl:register-function :complete #'custom-complete)
 
-;; -1 means take the string as one arg
-(defvar *special*
-  (alexandria:alist-hash-table
-   `(("h"    . (1  . ,#'help))
-     ("help" . (0  . ,#'general-help))
-     ("def"  . (0  . ,#'print-defined-symbols))
-     ("s"    . (1  . ,#'write-to-file))
-     ("d"    . (1  . ,#'dump-disasm))
-     ("t"    . (-1 . ,#'dump-type))
-     ("q"    . (0  . ,#'end))
-     ("r"    . (0  . ,#'reset))) :test 'equal))
+;; the number indicates the number of arguments
+;; -1 means don't split the string and take it as single argument
+(let ((special-commands `(("h"    . (1  . ,#'help))
+                          ("help" . (0  . ,#'general-help))
+                          ("def"  . (0  . ,#'print-defined-symbols))
+                          ("s"    . (1  . ,#'write-to-file))
+                          ("d"    . (1  . ,#'dump-disasm))
+                          ("t"    . (-1 . ,#'dump-type))
+                          ("q"    . (0  . ,#'end))
+                          ("r"    . (0  . ,#'reset)))))
+  (defvar *special* (make-hash-table :test #'equal :size (length special-commands))
+    "Hashtable that maps the name of a special command to a CONS whose CAR is the
+number of arguments it takes (or -1 for the entire string) and whose CDR is its handler function.")
+  (loop for (key . val) in special-commands
+     do (setf (gethash key *special*) val)))
 
 (defun sbcli (txt p)
   (let ((text
