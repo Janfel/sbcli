@@ -1,6 +1,6 @@
 #!/usr/bin/env -S sbcl --script
 
-(load (format nil "~a/setup.lisp" (or (sb-ext:posix-getenv "QUICKLISP_HOME") "~/quicklisp/")))
+(load (format nil "~a/setup.lisp" (or (sb-ext:posix-getenv "QUICKLISP_HOME") #P"~/quicklisp/")))
 (let ((*standard-output* (make-broadcast-stream)))
   (ql:quickload "alexandria")
   (ql:quickload "cl-readline"))
@@ -18,7 +18,7 @@
 (defconstant +repl-name+    "Veit's REPL for SBCL")
 (defconstant +repl-version+ "0.1.3")
 (defconstant +home-directory+
-  (format nil "~a/sbcli/"   (or (sb-ext:posix-getenv "XDG_CONFIG_HOME") "~/.config/"))
+  (format nil "~a/sbcli/" (or (sb-ext:posix-getenv "XDG_CONFIG_HOME") #P"~/.config/"))
   "The directory where the init and history files are stored.")
 (defconstant +init-file+
   (merge-pathnames "init.lisp" +home-directory+)
@@ -236,8 +236,8 @@
     (sbcli "" *prompt*)))
 
 (cond
-  ((probe-file +init-file+)  (load +init-file+))   ; .config/sbcli/init.lisp
-  ((probe-file "~/.sbclirc") (load "~/.sbclirc"))) ; legacy init file
+  ((probe-file +init-file+)    (load +init-file+))     ; .config/sbcli/init.lisp
+  ((probe-file #P"~/.sbclirc") (load #P"~/.sbclirc"))) ; legacy init file
 
 (write-line *welcome-msg*)
 (write-line "Press CTRL-C or CTRL-D or type ,q to exit")
