@@ -135,10 +135,7 @@
 (defun dump-type (expr)
   "Prints the type of a expression <expr>"
   (handler-case (format t "~a~%" (type-of (eval (read-from-string expr))))
-    (unbound-variable              (var) (format t "~a~%" var))
-    (type-error                    (err) (format t "~a~%" err))
-    (sb-int:compiled-program-error (err) (format t "~a~%" err))
-    (undefined-function            (fun) (format t "~a~%" fun))))
+    (error (err) (format t "~a~%" err))))
 
 (defun custom-complete (text start end)
   (declare (ignore start) (ignore end))
